@@ -89,3 +89,19 @@ module "asg" {
     ecs_cluster_name                        = module.ecs.ecs_cluster_name
     ecs_service_name                        = module.ecs.ecs_service_name
 } 
+
+
+# create record set 
+module "route_53" {
+    source                                  = "../modules/route-53"
+    domain_name                             = module.acm.domain_name
+    record_name                             = var.record_name
+    alb_dns_name                            = module.alb.alb_dns_name
+    alb_zone_id                             = module.alb.alb_zone_id
+}
+
+
+# Create output for website name
+output "website_url" {
+    value = join ("", ["https://", var.record_name, ".", var.domain_name])
+}
